@@ -92,7 +92,7 @@ int get_index (int vertex, int size)
     else if(vertex < 0)
         return  size + (vertex % size);
 }
-
+/*
 std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
 {
 
@@ -139,7 +139,9 @@ std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
 
     */
 
-    while(1)
+
+
+/*while(1)
         {
             if(st.size() > 2)
                 if(st[1] == st[st.size() - 1])
@@ -189,6 +191,47 @@ std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
 //st.erase(std::unique(st.begin(), st.end()), st.end());
 
     return result;
+
+}
+*/
+
+
+std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
+{
+    std::vector<Point2D> st;
+    Point2D rightest = points[0];
+    int rightest_pos = 0;
+    for(int i = 0; i < points.size(); i++)
+    {
+        if(points[i].x > rightest.x || (points[i].x == rightest.x && points[i].y < rightest.y))
+        {
+            rightest = points[i];
+            rightest_pos = i;
+        }
+    }
+
+    int cur = 1;
+    st.push_back(points[get_index(rightest_pos  - 1, points.size())]);
+    st.push_back(points[rightest_pos]);
+    while(!(st[1] == st[st.size() - 1]  &&   st.size() > 2))
+    {
+        int left = is_left(st[st.size() - 2], st[st.size() - 1], points[get_index(cur + rightest_pos, points.size())]);
+        if( left > 0)
+        {
+            st.push_back(points[get_index(cur + rightest_pos, points.size())]);
+            cur++;
+        }
+        else
+        {
+            st.pop_back();
+            //cur--;
+        }
+    }
+
+    st.erase(st.begin());
+    st.pop_back();
+    return st;
+
 
 }
 

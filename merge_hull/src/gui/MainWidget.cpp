@@ -2,13 +2,13 @@
 #include "src/algo/merge_hull.h"
 
 MainWidget::MainWidget()
-    :   clearButton ("Clear graph"),
+    :   clearButton ("Clear"),
         exitButton ("Exit"),
-        exportButton ("Export poly to:"),
-        importFromFileButton ("Import poly from file:"),
-        processButton ("Triangulate"),
+        exportButton ("Export points to:"),
+        importFromFileButton ("Import points from file:"),
+        processButton ("Convex Hull"),
         fileNameExport ("output.txt"),
-        fileNameInput ("input.txt"),
+        fileNameInput ("test.txt"),
         visualizer (this) {
 
     tabs.addTab(&visualizer, "Visualizer");
@@ -77,10 +77,13 @@ void MainWidget::clickedProcessButton() {
     //std::vector <Triangle2D> triangles;
     Graph <Point2D> convex_hull;
     std::vector<Point2D> hull = merge_hull (poly.vertices);
+
     convex_hull.vertices = hull;
     convex_hull.connectVertices();
+
     visualizer.replacePoly(convex_hull);
-    poly.connectVertices();
+    poly.edges.clear();
+//    poly.connectVertices();
     visualizer.update();
 
     for (unsigned int i = 0; i < hull.size(); ++i) {

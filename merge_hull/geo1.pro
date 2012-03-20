@@ -10,8 +10,6 @@ SOURCES += src/algo/main.cpp \
     src/gui/MainWidget.cpp \
     src/gui/Drawer.cpp \
     src/objects/Point2D.cpp \
-    src/objects/Vector2D.cpp \
-    src/objects/Triangle2D.cpp \
     src/algo/merge_hull.cpp
 
 HEADERS += \
@@ -19,7 +17,5 @@ HEADERS += \
     src/gui/Drawer.h \
     src/objects/Graph.h \
     src/objects/Point2D.h \
-    src/objects/Vector2D.h \
-    src/objects/Triangle2D.h \
     src/algo/PolygonInputParser.h \
     src/algo/merge_hull.h
