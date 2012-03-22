@@ -11,7 +11,6 @@
 #include "src/algo/PolygonInputParser.h"
 #include "src/gui/Drawer.h"
 #include "src/objects/Graph.h"
-//#include "src/objects/Triangle2D.h"
 
 class MainWidget : public QWidget {
     Q_OBJECT

@@ -1,6 +1,7 @@
 #include "MainWidget.h"
 #include "src/algo/merge_hull.h"
 
+
 MainWidget::MainWidget()
     :   clearButton ("Clear"),
         exitButton ("Exit"),
@@ -76,8 +77,7 @@ void MainWidget::clickedProcessButton() {
     //poly.connectVertices();
     //std::vector <Triangle2D> triangles;
     Graph <Point2D> convex_hull;
-    std::vector<Point2D> hull = merge_hull (poly.vertices);
-
+    std::vector<Point2D> hull = merge_hull (remove_equals(poly.vertices));
     convex_hull.vertices = hull;
     convex_hull.connectVertices();
 

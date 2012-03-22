@@ -2,12 +2,14 @@
 #define MERGE_HULL_H
 #include <iostream>
 #include <algorithm>
-
+#include <set>
 #include <cstdio>
 #include <math.h>
 #include <vector>
 #include "src/objects/Point2D.h"
 
+std::vector<Point2D> remove_equals(std::vector<Point2D> points);
+bool is_line(std::vector<Point2D> points);
 double get_length(Point2D p1, Point2D p2);
 double get_angle(Point2D p1, Point2D p2);
 int is_left(Point2D p1, Point2D p2, Point2D p3);

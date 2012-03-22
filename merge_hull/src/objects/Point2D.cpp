@@ -46,3 +46,12 @@ bool operator ==(const Point2D& a, const Point2D& b)
     else
         return 0;
 }
+bool operator <(const Point2D& a, const Point2D& b)
+{
+    if(a.x < b.x)
+        return 1;
+    else if(a.x == b.x && a.y < b.y)
+        return 1;
+    else
+        return 0;
+}

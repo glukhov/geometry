@@ -12,6 +12,7 @@ public:
     Point2D& operator -= (const Point2D &arg);
 
     friend bool operator ==(const Point2D& a, const Point2D& b);
+    friend bool operator <(const Point2D& a, const Point2D& b);
     int getX () {return x;}
     int getY () {return y;}
     int x;

@@ -2,6 +2,39 @@
 #include "src/algo/merge_hull.h"
 #define SIZE 5
 
+bool is_line(std::vector<Point2D> points)
+{
+    if(points.size() < 3)
+    {
+        //printf("2 points");
+        return true;
+    }
+
+    for(int i = 0; i < points.size() - 2; i++)
+    {
+        if(is_left(points[i], points[i + 1], points[i + 2]) != 0)
+            return false;
+    }
+
+    return true;
+}
+
+std::vector<Point2D> remove_equals(std::vector<Point2D> points)
+{
+    std::set<Point2D> set;
+    for(int i = 0; i < points.size(); i++)
+    {
+        set.insert(points[i]);
+    }
+    std::vector<Point2D> res;
+    std::set<Point2D>::iterator it;
+    for(it = set.begin(); it != set.end(); ++it)
+    {
+        res.push_back(*it);
+    }
+    return res;
+}
+
 double get_length(Point2D p1, Point2D p2)
 {
     return sqrt(double((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
@@ -199,6 +232,12 @@ std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
 std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
 {
     std::vector<Point2D> st;
+    if(is_line(points))
+    {
+        st.push_back(points[0]);
+        st.push_back(points[points.size() - 1]);
+        return st;
+    }
     Point2D rightest = points[0];
     int rightest_pos = 0;
     for(int i = 0; i < points.size(); i++)
@@ -239,8 +278,14 @@ std::vector<Point2D> graham_scan(std::vector<Point2D> points, Point2D pole)
 {
     std::vector<Point2D> st;
 
-    if(points.size() < 2 )
-        std::cout << "ololol";
+    points.push_back(pole);
+    if(is_line(points))
+    {
+        st.push_back(points[points.size() - 1]);
+        st.push_back(points[points.size() - 2]);
+        return st;
+    }
+    points.pop_back();
 
 
     st.push_back(points[points.size() - 1]);
@@ -446,28 +491,114 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 
     Point2D p = centroid(set1[0], set1[set1.size() - 2], set1[set1.size() - 1]);
     std::vector<Point2D> sum;
+    int is_line1 = is_line(set1);
+    int is_line2 = is_line(set2);
 
-    if(in_polygon(set2, p) != 0)
+    if(!is_line1)
     {
-        sum = merge_poligons(set1, set2, p);
-        return my_graham_scan(sum);
-
+        for(int i = 0; i < set1.size() - 2; i++)
+        {
+            if(is_left(set1[i], set1[i + 1], set1[i + 2]) != 0)
+            {
+                p = centroid(set1[i], set1[i + 1], set1[i + 2]);
+                break;
+            }
+        }
     }
-    else
+    else if(!is_line2)
     {
-        std::vector<Point2D> clean_set2;
+        for(int i = 0; i < set2.size() - 2; i++)
+        {
+            if(is_left(set2[i], set2[i + 1], set2[i + 2]) != 0)
+            {
+                p = centroid(set2[i], set2[i + 1], set2[i + 2]);
+                break;
+            }
+        }
+    }
 
+    if(!is_line1 && !is_line2)// 2 polygons
+    {
+        if(in_polygon(set2, p) != 0)
+        {
+            sum = merge_poligons(set1, set2, p);
+            return my_graham_scan(sum);
+
+        }
+        else
+        {
+            std::vector<Point2D> clean_set2;
+
+            clean_set2 = delete_chain(set2, p);
+            sum = merge_poligons(set1, clean_set2, p);
+
+            return my_graham_scan(sum);
+        }
+    }
+    else if (!is_line1 && is_line2)//polygon with centroid p and line
+    {
+
+        std::vector<Point2D> clean_set2;
+       /*
         clean_set2 = delete_chain(set2, p);
+        sum = merge_poligons(set1, clean_set2, p);
+        */
+
+
+        if(angle_compare(p, set2[0], set2[set2.size() - 1]))
+        {
+            clean_set2.push_back(set2[0]);
+            clean_set2.push_back(set2[set2.size() - 1]);
+        }
+        else
+        {
+            clean_set2.push_back(set2[set2.size() - 1]);
+            clean_set2.push_back(set2[0]);
+        }
+
         sum = merge_poligons(set1, clean_set2, p);
 
         return my_graham_scan(sum);
     }
+    else if(is_line1 && !is_line2)
+    {
+        std::vector<Point2D> clean_set1;
+    /*
+        clean_set1 = delete_chain(set1, p);
+        sum = merge_poligons(clean_set1, set2, p);
+    */
+        if(angle_compare(p, set1[0], set1[set1.size() - 1]))
+        {
+            clean_set1.push_back(set1[0]);
+            clean_set1.push_back(set1[set1.size() - 1]);
+        }
+        else
+        {
+            clean_set1.push_back(set1[set1.size() - 1]);
+            clean_set1.push_back(set1[0]);
+        }
 
+        sum = merge_poligons(clean_set1, set2, p);
+        return my_graham_scan(sum);
+
+    }
+    else // if(is_line1 && is_line2)
+    {
+        std::vector<Point2D> clean_set1;
+        clean_set1.push_back(set1[0]);
+        clean_set1.push_back(set1[set1.size() - 1]);
+        clean_set1.push_back(set2[0]);
+        clean_set1.push_back(set2[set2.size() - 1]);
+        return get_hull(clean_set1);
+    }
 }
 
 std::vector<Point2D> merge_hull(std::vector<Point2D> set)
 {
 
+
+    if(set.size() < 2)
+        return set;
     if (set.size() <= SIZE)
     {
         return get_hull(set);
