@@ -83,7 +83,7 @@ void MainWidget::clickedProcessButton() {
 
     visualizer.replacePoly(convex_hull);
     poly.edges.clear();
-//    poly.connectVertices();
+   // poly.connectVertices();
     visualizer.update();
 
     for (unsigned int i = 0; i < hull.size(); ++i) {
@@ -94,5 +94,7 @@ void MainWidget::clickedProcessButton() {
 
 void MainWidget::removePoint(unsigned int index) {
     poly.removePoint(index);
+    poly.edges.clear();
     visualizer.replacePoly(poly);
+
 }

@@ -37,7 +37,9 @@ std::vector<Point2D> remove_equals(std::vector<Point2D> points)
 
 double get_length(Point2D p1, Point2D p2)
 {
+
     return sqrt(double((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+
 }
 
 double get_angle(Point2D p1, Point2D p2)
@@ -52,7 +54,61 @@ int is_left(Point2D p1, Point2D p2, Point2D p3)
     return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
 }
 
-bool angle_compare(Point2D  pole,Point2D  i, Point2D  j)
+double is_left(Point2Df p1, Point2Df p2, Point2Df p3)
+{
+    return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
+}
+
+
+bool angle_compare(Point2D  pole, Point2D  i, Point2D  j)
+{
+    if(is_left(pole, i , j) == 0)
+        {
+            if( (i.y > pole.y && j.y > pole.y) || (i.y < pole.y && j.y < pole.y) )
+            {
+                return (get_length(i, pole) < get_length(j, pole));
+            }
+            else if(i.y = pole.y && j.y == pole.y)
+            {
+                if( (i.x > pole.x && j.x > pole.x) || (i.x < pole.x && j.x < pole.y) )
+                    return (get_length(i, pole) < get_length(j, pole));
+                else
+                    return (i.x < j.x);
+            }
+            else
+            {
+                return (i.y > j.y);
+            }
+        }
+        else
+        {
+            if(is_left(pole, i, j) > 0)
+            {
+                if(i.y >= pole.y)
+                    return 1;
+                else
+                {
+                    if(j.y < pole.y)
+                        return 1;
+                    else
+                        return 0;
+                }
+            }
+            else
+            {
+                if(i.y < pole.y)
+                    return 0;
+                else
+                {
+                    if(j.y >= pole.y)
+                        return 0;
+                    else
+                        return 1;
+                }
+            }
+        }
+}
+bool angle_compare(Point2Df  pole, Point2Df  i, Point2Df j)
 {
     if(is_left(pole, i , j) == 0)
         {
@@ -115,6 +171,20 @@ public:
         return angle_compare(pole, i, j);
     }
 };
+class fsort_class
+{
+public:
+    Point2Df pole;
+    fsort_class(Point2Df p)
+    {
+        this->pole = p;
+    }
+
+    bool operator() (Point2D i, Point2D j)
+    {
+        return angle_compare(pole,(Point2Df) i, (Point2Df)j);
+    }
+};
 
 int get_index (int vertex, int size)
 {
@@ -125,108 +195,6 @@ int get_index (int vertex, int size)
     else if(vertex < 0)
         return  size + (vertex % size);
 }
-/*
-std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
-{
-
-    if(points.size() < 3 )
-        std::cout << "ololol";
-    std::vector<int> st;
-    std::vector<Point2D> result;
-    int cur = 2;
-    int prev;
-    int prevprev;
-    st.push_back(0);
-    st.push_back(1);
-  /*
-    while(!(st[1] == st[st.size() - 1]  &&   st.size() > 2))
-    {
-        if(st.size() > 1)
-        {
-            prev = st.size() - 1;
-            prevprev = st.size() - 2;
-        }
-        else if(st.size() == 1)
-        {
-            prev = 0;
-            prevprev = points.size() - 1;
-        }
-        else
-        {
-            prev = get_index(cur - 1, points.size());
-            prevprev = get_index(cur - 2, points.size());
-        }
-
-        int left = is_left(points[st[prevprev]], points[st[prev]], points[get_index(cur, points.size())]);
-        if( left > 0)
-        {
-            st.push_back(get_index(cur, points.size()));
-            cur++;
-        }
-        else
-        {
-            st.pop_back();
-            //cur--;
-        }
-    }
-
-    */
-
-
-
-/*while(1)
-        {
-            if(st.size() > 2)
-                if(st[1] == st[st.size() - 1])
-                    break;
-
-
-
-
-            if(st.size() == 1)
-            {
-                int temp = st[0] ;
-                st.pop_back();
-
-                //prev = 0;
-                st.push_back(points.size() - 1);
-                st.push_back(temp);
-            }
-            else if(st.size() == 0)
-            {
-                st.push_back(get_index(cur - 2, points.size()));
-                st.push_back(get_index(cur - 1, points.size()));
-            }
-
-            prev = st.size() - 1;
-            prevprev = st.size() - 2;
-
-            int left = is_left(points[st[prevprev]], points[st[prev]], points[get_index(cur, points.size())]);
-
-
-            if( left > 0)
-            {
-                st.push_back(get_index(cur, points.size()));
-                cur++;
-            }
-            else
-            {
-                st.pop_back();
-                //cur--;
-            }
-
-        }
-    st.pop_back();
-    for(int i = 1; i < st.size(); i++)
-    {
-        result.push_back(points[st[i]]);
-    }
-//st.erase(std::unique(st.begin(), st.end()), st.end());
-
-    return result;
-
-}
-*/
 
 
 std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
@@ -353,11 +321,13 @@ std::vector<Point2D> get_hull_sorted(std::vector<Point2D> sorted_points, Point2D
     return hull;
 
 }
-Point2D centroid(Point2D p1, Point2D p2, Point2D p3)
+Point2Df centroid(Point2D p1, Point2D p2, Point2D p3)
 {
-    Point2D p;
-    p.x = (p1.x + p2.x + p3.x) / 3;
-    p.y = (p1.y + p2.y + p3.y) / 3;
+    Point2Df p;
+    p.x = (p1.x + p2.x + p3.x);
+    p.x /= 3.0;
+    p.y = (p1.y + p2.y + p3.y);
+    p.y /= 3.0;
     return p;
 }
 
@@ -371,20 +341,30 @@ int in_polygon(std::vector<Point2D> polygon, Point2D p)
     return 1;
 }
 
+int in_polygon(std::vector<Point2D> polygon, Point2Df p)
+{
+    for(int i = 0; i < polygon.size() - 1; i++)
+    {
+        if(is_left( (Point2Df) polygon[i],(Point2Df) polygon[i + 1], p) < 0.0)
+            return 0;
+    }
+    return 1;
+}
+
 //min in sum[0]
-std::vector<Point2D> merge_poligons(std::vector<Point2D> set1, std::vector<Point2D> set2, Point2D pole)
+std::vector<Point2D> merge_poligons(std::vector<Point2D> set1, std::vector<Point2D> set2, Point2Df pole)
 {
 
         int min1 = 0;
         int min2 = 0;
         for(int i = 0; i < set1.size(); i++)
         {
-            if(angle_compare(pole, set1[i], set1[min1]))
+            if(angle_compare(pole,(Point2Df) set1[i], (Point2Df)set1[min1]))
                 min1 = i;
         }
         for(int i = 0; i < set2.size(); i++)
         {
-            if(angle_compare(pole, set2[i], set2[min2]))
+            if(angle_compare(pole,(Point2Df) set2[i],(Point2Df) set2[min2]))
                 min2 = i;
         }
 
@@ -406,7 +386,7 @@ std::vector<Point2D> merge_poligons(std::vector<Point2D> set1, std::vector<Point
         int last_2;
         for(int i = 0, j = 0; i < sset1.size() && j < sset2.size();)
         {
-            if(angle_compare(pole, sset1[i], sset2[j]))
+            if(angle_compare(pole, (Point2Df)sset1[i], (Point2Df)sset2[j]))
             {
                 sum.push_back(sset1[i++]);
             }
@@ -440,27 +420,27 @@ std::vector<Point2D> merge_poligons(std::vector<Point2D> set1, std::vector<Point
 
 }
 
-std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2D pole)
+std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2Df pole)
 {
 
     //find most right and most left;
     int left = 0;
     int right = 0;
-    int enext;
+    double enext;
     points.push_back(points[0]);
-    int eprev = is_left(points[0], points[1], pole);
+    double eprev = is_left((Point2Df)points[0],(Point2Df) points[1], pole);
 
     for(int i = 1; i < points.size() - 1; i++)
     {
-        enext = is_left(points[i], points[i + 1], pole);
-        if ((eprev <= 0) && (enext > 0))
+        enext = is_left((Point2Df)points[i], (Point2Df)points[i + 1], pole);
+        if ((eprev <= 0.0) && (enext > 0.0))
         {
-            if (is_left(pole, points[i], points[right]) >= 0)
+            if (is_left(pole, (Point2Df)points[i], (Point2Df)points[right]) >= 0.0)
                 right = i;
         }
         else if ((eprev > 0) && (enext <= 0))
         {
-            if (is_left(pole, points[i], points[left]) <= 0)
+            if (is_left(pole, (Point2Df)points[i], (Point2Df)points[left]) <= 0.0)
                 left = i;
         }
         eprev = enext;
@@ -489,7 +469,7 @@ std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2D pole)
 std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 {
 
-    Point2D p = centroid(set1[0], set1[set1.size() - 2], set1[set1.size() - 1]);
+    Point2Df p;
     std::vector<Point2D> sum;
     int is_line1 = is_line(set1);
     int is_line2 = is_line(set2);
@@ -545,7 +525,7 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
         */
 
 
-        if(angle_compare(p, set2[0], set2[set2.size() - 1]))
+        if(angle_compare(p, (Point2Df)set2[0], (Point2Df)set2[set2.size() - 1]))
         {
             clean_set2.push_back(set2[0]);
             clean_set2.push_back(set2[set2.size() - 1]);
@@ -567,7 +547,7 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
         clean_set1 = delete_chain(set1, p);
         sum = merge_poligons(clean_set1, set2, p);
     */
-        if(angle_compare(p, set1[0], set1[set1.size() - 1]))
+        if(angle_compare(p, (Point2Df)set1[0], (Point2Df)set1[set1.size() - 1]))
         {
             clean_set1.push_back(set1[0]);
             clean_set1.push_back(set1[set1.size() - 1]);
@@ -618,64 +598,5 @@ std::vector<Point2D> merge_hull(std::vector<Point2D> set)
 
 
 }
-/*
-int main()
-{
-    std::vector<Point2D> a;
-    std::vector<Point2D> b;
-    std::vector<Point2D> c;
-    std::vector<Point2D> d;
-    //Point2D pole (-2, 3);
-    int n;
 
-
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
-    std::cin >> n;
-
-    for(int i = 0; i < n; i++)
-    {
-        int x; int y;
-        std::cin >> x >> y;
-        a.push_back(Point2D(x, y));
-    }*/
- /*
-    for(int i = 0; i < 5; i++)
-    {
-        int x; int y;
-        std::cin >> x >> y;
-        a.push_back(Point2D(x, y));
-    }
-    for(int i = 0; i < 6; i++)
-    {
-        int x; int y;
-        std::cin >> x >> y;
-        b.push_back(Point2D(x, y));
-    }
-    */
-    //d.erase(std::unique(d.begin(), d.end()), d.end());
-
-  //  d = merge_hull(a);
-//	int t = is_left(a[0], a[1], a[2]);
-
-  //  Point2D pole (0, 0);
-//	sort_class sorter(pole);
- //   std::sort(a.begin(), a.end(), sorter);
-
-    //std::cout << t;
-
-    //d = delete_chain(a, pole);
-    //c = merge_poligons(a, b, pole);
-
-//	d = my_graham_scan(a);
-
-/*
-    for(int i = 0; i < d.size(); i++)
-    {
-        std::cout << d[i].x << "  " << d[i].y << std::endl;
-    }
-    //*/
-/*    return 0;
-}
-*/
 
