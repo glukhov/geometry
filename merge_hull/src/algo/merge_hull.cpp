@@ -49,19 +49,34 @@ double get_angle(Point2D p1, Point2D p2)
     //return (p2.x - p1.x) / (p2.y - p1.y);
 }
 
-int is_left(Point2D p1, Point2D p2, Point2D p3)
+long long int is_left(Point2D p1, Point2D p2, Point2D p3)
 {
-    return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
+   // -236479*165277 - -259106*176670
+    long long int res = ((long long int)p2.x - (long long int)p1.x);
+    res *= ((long long int)p3.y - (long long int)p1.y);
+    long long int res2 =  ((long long int)p3.x - (long long int)p1.x);
+    res2 *=  ((long long int)p2.y - (long long int)p1.y);
+    long long int res3 = res - res2;
+    return res3;
 }
 
 double is_left(Point2Df p1, Point2Df p2, Point2Df p3)
 {
-    return (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
+   // -236479*165277 - -259106*176670
+    double res = ((double)p2.x - (double)p1.x);
+    res *= ((double)p3.y - (double)p1.y);
+    double res2 =  ((double)p3.x - (double)p1.x);
+    res2 *=  ((double)p2.y - (double)p1.y);
+    double res3 = res - res2;
+    return res3;
 }
-
 
 bool angle_compare(Point2D  pole, Point2D  i, Point2D  j)
 {
+    if(pole == i)
+        return 1;
+    if(pole == j)
+        return 0;
     if(is_left(pole, i , j) == 0)
         {
             if( (i.y > pole.y && j.y > pole.y) || (i.y < pole.y && j.y < pole.y) )
@@ -110,6 +125,10 @@ bool angle_compare(Point2D  pole, Point2D  i, Point2D  j)
 }
 bool angle_compare(Point2Df  pole, Point2Df  i, Point2Df j)
 {
+    if(pole == i)
+        return 1;
+    if(pole == j)
+        return 0;
     if(is_left(pole, i , j) == 0)
         {
             if( (i.y > pole.y && j.y > pole.y) || (i.y < pole.y && j.y < pole.y) )
@@ -222,7 +241,7 @@ std::vector<Point2D> my_graham_scan(std::vector<Point2D> points)
     st.push_back(points[rightest_pos]);
     while(!(st[1] == st[st.size() - 1]  &&   st.size() > 2))
     {
-        int left = is_left(st[st.size() - 2], st[st.size() - 1], points[get_index(cur + rightest_pos, points.size())]);
+        long long int left = is_left(st[st.size() - 2], st[st.size() - 1], points[get_index(cur + rightest_pos, points.size())]);
         if( left > 0)
         {
             st.push_back(points[get_index(cur + rightest_pos, points.size())]);
@@ -261,7 +280,7 @@ std::vector<Point2D> graham_scan(std::vector<Point2D> points, Point2D pole)
 
     for(int i = 0; i < points.size(); i++)
     {
-        int left = is_left(st[st.size() - 2], st[st.size() - 1], points[i] );
+        long long int left = is_left(st[st.size() - 2], st[st.size() - 1], points[i] );
         if( left > 0)
         {
             if(!(points[i] == st[0]) && !(points[i] == st[1]))
@@ -369,7 +388,7 @@ std::vector<Point2D> merge_poligons(std::vector<Point2D> set1, std::vector<Point
         }
 
         std::vector<Point2D> sset1;
-        sset1.assign(set1.begin() + min1, set1.end());
+        sset1.assign(set1.begin() + min1, set1.end() );
         for(int i = 0; i < min1; i++)
         {
             sset1.push_back(set1[i]);
@@ -576,7 +595,7 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 std::vector<Point2D> merge_hull(std::vector<Point2D> set)
 {
 
-
+    //std::cout << "lol";
     if(set.size() < 2)
         return set;
     if (set.size() <= SIZE)

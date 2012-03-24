@@ -13,7 +13,7 @@ std::vector<Point2D> remove_equals(std::vector<Point2D> points);
 bool is_line(std::vector<Point2D> points);
 double get_length(Point2D p1, Point2D p2);
 double get_angle(Point2D p1, Point2D p2);
-int is_left(Point2D p1, Point2D p2, Point2D p3);
+long long int is_left(Point2D p1, Point2D p2, Point2D p3);
 double is_left(Point2Df p1, Point2Df p2, Point2Df p3);
 bool angle_compare(Point2D  pole,Point2D  i, Point2D  j);
 class sort_class;
