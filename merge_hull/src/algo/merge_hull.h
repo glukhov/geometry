@@ -28,6 +28,7 @@ std::vector<Point2D> graham_scan(std::vector<Point2D> points);
 std::vector<Point2D> graham_scan(std::vector<Point2D> points, Point2D pole);
 
 std::vector<Point2D> get_hull(std::vector<Point2D> points);
+std::vector<Point2D> get_hull_sorted(std::vector<Point2D> sorted_points, Point2D pole);
 Point2Df centroid(Point2D p1, Point2D p2, Point2D p3);
 
 std::vector<Point2D> remove_equals(std::vector<Point2D> points);
@@ -37,8 +38,7 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 std::vector<Point2D> merge_polygons(std::vector<Point2D> set1, std::vector<Point2D> set2, Point2D pole);
 std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2D pole);
 
-
-
 class sort_class;
+
 #endif // MERGE_HULL_H
 

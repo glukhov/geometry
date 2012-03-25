@@ -1,6 +1,25 @@
 
 #include "src/algo/merge_hull.h"
+
+
+//do not want smallest sets to be < 3   (6/2 = 3)
 #define SIZE 5
+
+class sort_class
+{
+public:
+    Point2D pole;
+    sort_class(Point2D p)
+    {
+        this->pole = p;
+    }
+
+    bool operator() (Point2D i, Point2D j)
+    {
+        return angle_compare(pole, i, j);
+    }
+};
+
 
 bool is_line(std::vector<Point2D> points)
 {
@@ -19,20 +38,19 @@ bool is_line(std::vector<Point2D> points)
     return true;
 }
 
-std::vector<Point2D> remove_equals(std::vector<Point2D> points)
+int get_pole(std::vector<Point2D> points)
 {
-    std::set<Point2D> set;
+    Point2D pole = points[0];
+    int pole_pos = 0;
     for(int i = 0; i < points.size(); i++)
     {
-        set.insert(points[i]);
+        if(points[i].y < pole.y || (points[i].y == pole.y && points[i].x < pole.x))
+        {
+            pole = points[i];
+            pole_pos = i;
+        }
     }
-    std::vector<Point2D> res;
-    std::set<Point2D>::iterator it;
-    for(it = set.begin(); it != set.end(); ++it)
-    {
-        res.push_back(*it);
-    }
-    return res;
+    return pole_pos;
 }
 
 double get_length(Point2D p1, Point2D p2)
@@ -71,6 +89,8 @@ double is_left(Point2Df p1, Point2Df p2, Point2Df p3)
     return res3;
 }
 
+
+//returns i < j
 bool angle_compare(Point2D  pole, Point2D  i, Point2D  j)
 {
     if(pole == i)
@@ -177,21 +197,28 @@ bool angle_compare(Point2Df  pole, Point2Df  i, Point2Df j)
         }
 }
 
-class sort_class
+int in_polygon(std::vector<Point2D> polygon, Point2D p)
 {
-public:
-    Point2D pole;
-    sort_class(Point2D p)
+    for(int i = 0; i < polygon.size() - 1; i++)
     {
-        this->pole = p;
+        if(is_left(polygon[i], polygon[i + 1], p) < 0)
+            return 0;
     }
+    return 1;
+}
 
-    bool operator() (Point2D i, Point2D j)
+int in_polygon(std::vector<Point2D> polygon, Point2Df p)
+{
+    for(int i = 0; i < polygon.size() - 1; i++)
     {
-        return angle_compare(pole, i, j);
+        if(is_left( (Point2Df) polygon[i],(Point2Df) polygon[i + 1], p) < 0.0)
+            return 0;
     }
-};
+    return 1;
+}
 
+
+//index of vertex, if polygon is ring
 int get_index (int vertex, int size)
 {
     if(vertex >= 0 && vertex < size)
@@ -203,6 +230,7 @@ int get_index (int vertex, int size)
 }
 
 
+//takes sorted points
 std::vector<Point2D> graham_scan(std::vector<Point2D> points)
 {
     std::vector<Point2D> st;
@@ -290,21 +318,9 @@ std::vector<Point2D> graham_scan(std::vector<Point2D> points, Point2D pole)
     return st;
 
 }
-int get_pole(std::vector<Point2D> points)
-{
-    Point2D pole = points[0];
-    int pole_pos = 0;
-    for(int i = 0; i < points.size(); i++)
-    {
-        if(points[i].y < pole.y || (points[i].y == pole.y && points[i].x < pole.x))
-        {
-            pole = points[i];
-            pole_pos = i;
-        }
-    }
-    return pole_pos;
-}
 
+
+//returns convex hull of the algo's smallest sets
 std::vector<Point2D> get_hull(std::vector<Point2D> points)
 {
     int pole_pos = get_pole(points);
@@ -319,6 +335,7 @@ std::vector<Point2D> get_hull(std::vector<Point2D> points)
     return hull;
 
 }
+
 std::vector<Point2D> get_hull_sorted(std::vector<Point2D> sorted_points, Point2D pole)
 {
 
@@ -327,6 +344,8 @@ std::vector<Point2D> get_hull_sorted(std::vector<Point2D> sorted_points, Point2D
     return hull;
 
 }
+
+//return point in poly
 Point2Df centroid(Point2D p1, Point2D p2, Point2D p3)
 {
     Point2Df p;
@@ -337,27 +356,26 @@ Point2Df centroid(Point2D p1, Point2D p2, Point2D p3)
     return p;
 }
 
-int in_polygon(std::vector<Point2D> polygon, Point2D p)
+
+std::vector<Point2D> remove_equals(std::vector<Point2D> points)
 {
-    for(int i = 0; i < polygon.size() - 1; i++)
+    std::set<Point2D> set;
+    for(int i = 0; i < points.size(); i++)
     {
-        if(is_left(polygon[i], polygon[i + 1], p) < 0)
-            return 0;
+        set.insert(points[i]);
     }
-    return 1;
+    std::vector<Point2D> res;
+    std::set<Point2D>::iterator it;
+    for(it = set.begin(); it != set.end(); ++it)
+    {
+        res.push_back(*it);
+    }
+    return res;
 }
 
-int in_polygon(std::vector<Point2D> polygon, Point2Df p)
-{
-    for(int i = 0; i < polygon.size() - 1; i++)
-    {
-        if(is_left( (Point2Df) polygon[i],(Point2Df) polygon[i + 1], p) < 0.0)
-            return 0;
-    }
-    return 1;
-}
 
 //min in sum[0]
+//fast merging of 2 sorted polygons or chains
 std::vector<Point2D> merge_polygons(std::vector<Point2D> set1, std::vector<Point2D> set2, Point2Df pole)
 {
 
@@ -426,6 +444,7 @@ std::vector<Point2D> merge_polygons(std::vector<Point2D> set1, std::vector<Point
 
 }
 
+//deleting not sorted useless points
 std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2Df pole)
 {
 
@@ -472,6 +491,8 @@ std::vector<Point2D> delete_chain(std::vector<Point2D> points, Point2Df pole)
 
 }
 
+
+//merging of 2 convex hulls
 std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 {
 
@@ -582,7 +603,6 @@ std::vector<Point2D> merge(std::vector<Point2D> set1, std::vector<Point2D> set2)
 std::vector<Point2D> merge_hull(std::vector<Point2D> set)
 {
 
-    //std::cout << "lol";
     if(set.size() < 2)
         return set;
     if (set.size() <= SIZE)
