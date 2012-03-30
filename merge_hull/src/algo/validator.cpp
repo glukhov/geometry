@@ -9,7 +9,7 @@ void Validator::generate()
 
     srand ( time(NULL) );
     int a, b;
-    for(int i = 0; i < 1000; i++)
+    for(int i = 0; i < TEST_SIZE; i++)
     {
         a = (rand() - 16000) * (rand() - 16000);
         b = (rand() - 16000) * (rand() - 16000);
@@ -35,19 +35,19 @@ bool Validator::test()
     }
     std::cout << "good convex poly" << std::endl;
 
-    std::vector<bool> in_hull (points.size(), false);
+    std::vector<bool> is_hull (points.size(), false);
     for(int i = 0; i < convex_hull.size(); i++)
     {
         for(int j = 0; j < points.size(); j++)
         {
             if(convex_hull[i] == points[j])
-                in_hull[j] = true;
+                is_hull[j] = true;
         }
     }
 
     for(int i = 0; i < points.size(); i++)
     {
-        if(!in_hull[i])
+        if(!is_hull[i])
         {
             if(!in_polygon(convex_hull, points[i]))
             {
@@ -57,6 +57,6 @@ bool Validator::test()
         }
     }
 
-    std::cout << "all points are in hull" << std::endl << "all is OK, waiting picture" << std::endl << std::endl;
+    std::cout << "all points are in hull" << std::endl << "all is OK" << std::endl << std::endl;
     return true;
 }

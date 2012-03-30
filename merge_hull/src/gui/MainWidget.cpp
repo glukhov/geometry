@@ -108,6 +108,7 @@ void MainWidget::clickedRandomPicButton() {
     val.generate();
     val.get_hull();
     val.test();
+    std::cout << "picture is being drawn...";
     Graph <Point2D> convex_hull;
     convex_hull.vertices = val.convex_hull;
     convex_hull.connectVertices();

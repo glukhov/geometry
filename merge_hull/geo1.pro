@@ -11,7 +11,8 @@ SOURCES += src/algo/main.cpp \
     src/gui/Drawer.cpp \
     src/objects/Point2D.cpp \
     src/algo/merge_hull.cpp \
-    src/objects/Point2Df.cpp
+    src/objects/Point2Df.cpp \
+    src/algo/validator.cpp
 
 HEADERS += \
     src/gui/MainWidget.h \
@@ -20,4 +21,5 @@ HEADERS += \
     src/objects/Point2D.h \
     src/algo/PolygonInputParser.h \
     src/algo/merge_hull.h \
-    src/objects/Point2Df.h
+    src/objects/Point2Df.h \
+    src/algo/validator.h
