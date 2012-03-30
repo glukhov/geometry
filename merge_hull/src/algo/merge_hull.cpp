@@ -56,16 +56,18 @@ int get_pole(std::vector<Point2D> points)
 double get_length(Point2D p1, Point2D p2)
 {
 
-    return sqrt(double((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+    double x = p2.x - p1.x;
+    x *= x;
+    double y = p2.y - p1.y;
+    y *= y;
+    double sum = x + y;
+    sum = sqrt(sum);
+    return sum;
+    //return sqrt(double((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
 
 }
 
-double get_angle(Point2D p1, Point2D p2)
-{
 
-    return (p1.x - p2.x)/get_length(p1, p2);
-    //return (p2.x - p1.x) / (p2.y - p1.y);
-}
 
 long long int is_left(Point2D p1, Point2D p2, Point2D p3)
 {
@@ -103,7 +105,7 @@ bool angle_compare(Point2D  pole, Point2D  i, Point2D  j)
             {
                 return (get_length(i, pole) < get_length(j, pole));
             }
-            else if(i.y = pole.y && j.y == pole.y)
+            else if(i.y == pole.y && j.y == pole.y)
             {
                 if( (i.x > pole.x && j.x > pole.x) || (i.x < pole.x && j.x < pole.y) )
                     return (get_length(i, pole) < get_length(j, pole));
@@ -156,7 +158,7 @@ bool angle_compare(Point2Df  pole, Point2Df  i, Point2Df j)
             {
                 return (get_length(i, pole) < get_length(j, pole));
             }
-            else if(i.y = pole.y && j.y == pole.y)
+            else if(i.y == pole.y && j.y == pole.y)
             {
                 if( (i.x > pole.x && j.x > pole.x) || (i.x < pole.x && j.x < pole.y) )
                     return (get_length(i, pole) < get_length(j, pole));
