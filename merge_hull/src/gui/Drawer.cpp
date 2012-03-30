@@ -72,12 +72,15 @@ void Drawer::paintEvent(QPaintEvent *event) {
                               sqrt(scale) * radius, sqrt(scale) * radius);
 
         //print vertex numbers
+
         std::stringstream ss;
         ss << i;
         painter0.setPen(QPen(Qt::blue, 1, Qt::SolidLine));
         painter0.drawText((int)(offsetx + scale * (poly.getVertex(i).getX())),
                           (int)(offsety + scale * (poly.getVertex(i).getY() + radius)), ss.str().c_str());
         painter0.setPen(QPen(Qt::black, 1, Qt::SolidLine));
+
+
     }
 
     //Draw lines

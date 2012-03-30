@@ -27,6 +27,8 @@ protected:
     QPushButton exportButton;
     QPushButton importFromFileButton;
     QPushButton processButton;
+    QPushButton randomPicButton;
+    QPushButton randomNoPicButton;
 
     QLineEdit fileNameExport;
     QLineEdit fileNameInput;
@@ -45,6 +47,8 @@ public slots:
     void clickedExportButton();
     void clickedImportFromFileButton();
     void clickedProcessButton();
+    void clickedRandomPicButton();
+    void clickedRandomNoPicButton();
     void removePoint (unsigned int);
 
 signals:
