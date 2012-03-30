@@ -93,7 +93,8 @@ void MainWidget::clickedProcessButton() {
    // poly.connectVertices();
     visualizer.update();
 
-    for (unsigned int i = 0; i < hull.size(); ++i) {
+    for (unsigned int i = 0; i < hull.size(); ++i)
+    {
         std::cout << hull[i].getX()<< ' ' << hull[i].getY() << std::endl;
     }
 
@@ -108,7 +109,11 @@ void MainWidget::clickedRandomPicButton() {
     val.generate();
     val.get_hull();
     val.test();
-    std::cout << "picture is being drawn...";
+    for (unsigned int i = 0; i < val.convex_hull.size(); ++i)
+    {
+        std::cout << val.convex_hull[i].getX()<< ' ' << val.convex_hull[i].getY() << std::endl;
+    }
+    std::cout << "picture is being drawn..." << std::endl << std::endl;
     Graph <Point2D> convex_hull;
     convex_hull.vertices = val.convex_hull;
     convex_hull.connectVertices();
@@ -125,6 +130,10 @@ void MainWidget::clickedRandomNoPicButton() {
     val.generate();
     val.get_hull();
     val.test();
+    for (unsigned int i = 0; i < val.convex_hull.size(); ++i)
+    {
+        std::cout << val.convex_hull[i].getX()<< ' ' << val.convex_hull[i].getY() << std::endl;
+    }
 
 }
 
