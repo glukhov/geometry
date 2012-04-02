@@ -11,10 +11,17 @@ void Validator::generate()
     int a, b;
     for(int i = 0; i < TEST_SIZE; i++)
     {
-        a = (rand() - 16000) * (rand() - 16000) / 10;
-        b = (rand() - 16000) * (rand() - 16000) / 10;
+        /*
+        *for Win
+        a = (rand() - 16000) * (rand() - 16000);
+        b = (rand() - 16000) * (rand() - 16000);
+        */
+        //For Unix
+        a = (rand() - RAND_MAX / 2) % 100000000;
+        b = (rand() - RAND_MAX / 2) % 100000000;
         points.push_back(Point2D (a, b));
-      //  printf("%d %d\n", a, b);
+        //printf("%d\n", RAND_MAX);
+        //printf("%d %d\n", a, b);
     }
 
 }
