@@ -7,13 +7,14 @@ Validator::Validator()
 void Validator::generate()
 {
 
-    srand ( time(NULL) );
+    srand ( rand() );
     int a, b;
     for(int i = 0; i < TEST_SIZE; i++)
     {
-        a = (rand() - 16000) * (rand() - 16000);
-        b = (rand() - 16000) * (rand() - 16000);
+        a = (rand() - 16000) * (rand() - 16000) / 10;
+        b = (rand() - 16000) * (rand() - 16000) / 10;
         points.push_back(Point2D (a, b));
+      //  printf("%d %d\n", a, b);
     }
 
 }
