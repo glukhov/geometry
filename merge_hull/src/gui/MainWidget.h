@@ -11,6 +11,8 @@
 #include "src/algo/PolygonInputParser.h"
 #include "src/gui/Drawer.h"
 #include "src/objects/Graph.h"
+#include "src/algo/merge_hull.h"
+#include "src/algo/validator.h"
 
 class MainWidget : public QWidget {
     Q_OBJECT

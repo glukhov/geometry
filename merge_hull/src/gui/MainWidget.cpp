@@ -1,6 +1,5 @@
 #include "MainWidget.h"
-#include "src/algo/merge_hull.h"
-#include "src/algo/validator.h"
+
 
 
 MainWidget::MainWidget()
@@ -134,7 +133,7 @@ void MainWidget::clickedRandomNoPicButton() {
     {
         std::cout << val.convex_hull[i].getX()<< ' ' << val.convex_hull[i].getY() << std::endl;
     }
-
+    std::cout << std::endl;
 }
 
 

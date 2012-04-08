@@ -1,15 +1,18 @@
 #include "validator.h"
 
+int Validator::test_size = TEST_SIZE;
+
 Validator::Validator()
 {
 }
+
 
 void Validator::generate()
 {
 
     srand ( rand() );
     int a, b;
-    for(int i = 0; i < TEST_SIZE; i++)
+    for(int i = 0; i < this->test_size; i++)
     {
         /*
         *for Win
@@ -33,6 +36,10 @@ void Validator::get_hull()
 
 bool Validator::test()
 {
+    if(points.size() == 1 && convex_hull.size() == 1)
+        return true;
+    if(points.size() == 2 && convex_hull.size() == 2)
+        return true;
     for(int i = 0; i < convex_hull.size() - 3; i++)
     {
         if(!is_left(convex_hull[i], convex_hull[i + 1], convex_hull[i + 2]))
