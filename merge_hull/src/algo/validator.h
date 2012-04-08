@@ -6,7 +6,7 @@
 #include "src/algo/merge_hull.h"
 #include <vector>
 
-#define TEST_SIZE 2
+#define TEST_SIZE 10000
 
 class Validator
 {
