@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
             std::cout <<  i << " attempt"<< std::endl;
             mainWindow.clickedRandomNoPicButton();
         }
-        return app.exec();
+        return 0;
     }
     else
     {
