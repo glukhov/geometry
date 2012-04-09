@@ -29,6 +29,7 @@ protected:
     QPushButton exportButton;
     QPushButton importFromFileButton;
     QPushButton processButton;
+    QPushButton processWithTestButton;
     QPushButton randomPicButton;
     QPushButton randomNoPicButton;
 
@@ -49,6 +50,7 @@ public slots:
     void clickedExportButton();
     void clickedImportFromFileButton();
     void clickedProcessButton();
+    void clickedProcessWithTestButton();
     void clickedRandomPicButton();
     void clickedRandomNoPicButton();
     void removePoint (unsigned int);

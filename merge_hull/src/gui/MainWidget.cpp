@@ -8,6 +8,7 @@ MainWidget::MainWidget()
         exportButton ("Export points to:"),
         importFromFileButton ("Import points from file:"),
         processButton ("Convex Hull"),
+        processWithTestButton ("Convex Hull with Validator"),
         randomPicButton ("Random with picture"),
         randomNoPicButton ("Random test, no picture"),
         fileNameExport ("output.txt"),
@@ -23,12 +24,13 @@ MainWidget::MainWidget()
     controlWidgetLay.addWidget(&importFromFileButton, 0, 0);
     controlWidgetLay.addWidget(&fileNameInput, 1, 0);
     controlWidgetLay.addWidget(&processButton, 2, 0);
-    controlWidgetLay.addWidget(&clearButton, 5, 0);
-    controlWidgetLay.addWidget(&exportButton, 6, 0);
-    controlWidgetLay.addWidget(&fileNameExport, 7, 0);
-    controlWidgetLay.addWidget(&exitButton, 8, 0);
-    controlWidgetLay.addWidget(&randomPicButton, 3, 0);
-    controlWidgetLay.addWidget(&randomNoPicButton, 4, 0);
+    controlWidgetLay.addWidget(&processWithTestButton, 3, 0);
+    controlWidgetLay.addWidget(&randomPicButton, 4, 0);
+    controlWidgetLay.addWidget(&randomNoPicButton, 5, 0);
+    controlWidgetLay.addWidget(&clearButton, 6, 0);
+    controlWidgetLay.addWidget(&exportButton, 7, 0);
+    controlWidgetLay.addWidget(&fileNameExport, 8, 0);
+    controlWidgetLay.addWidget(&exitButton, 9, 0);
     controlWidget.setLayout(&controlWidgetLay);
     controlWidget.setMaximumWidth(200);
 
@@ -38,6 +40,7 @@ MainWidget::MainWidget()
     QObject::connect(&exitButton, SIGNAL(clicked()), this, SLOT(clickedExitButton()));
     QObject::connect(&exportButton, SIGNAL(clicked()), this, SLOT(clickedExportButton()));
     QObject::connect(&processButton, SIGNAL(clicked()), this, SLOT(clickedProcessButton()));
+    QObject::connect(&processWithTestButton, SIGNAL(clicked()), this, SLOT(clickedProcessWithTestButton()));
     QObject::connect(&randomPicButton, SIGNAL(clicked()), this, SLOT(clickedRandomPicButton()));
     QObject::connect(&randomNoPicButton, SIGNAL(clicked()), this, SLOT(clickedRandomNoPicButton()));
     QObject::connect(&importFromFileButton, SIGNAL(clicked()), this, SLOT(clickedImportFromFileButton()));
@@ -96,6 +99,30 @@ void MainWidget::clickedProcessButton() {
     {
         std::cout << hull[i].getX()<< ' ' << hull[i].getY() << std::endl;
     }
+    std::cout << std::endl;
+}
+
+void MainWidget::clickedProcessWithTestButton() {
+
+    Validator val;
+    val.points = poly.vertices;
+    val.get_hull();
+    val.test();
+
+    for (int j = 0; j < val.convex_hull.size(); j++)
+    {
+        std::cout << val.convex_hull[j].getX()<< ' ' << val.convex_hull[j].getY() << std::endl;
+    }
+    std::cout << std::endl;
+
+    Graph <Point2D> convex_hull;
+    convex_hull.vertices = val.convex_hull;
+    convex_hull.connectVertices();
+
+    visualizer.replacePoly(convex_hull);
+    poly.edges.clear();
+    visualizer.update();
+
 
 }
 
